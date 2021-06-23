@@ -1,5 +1,6 @@
 import React from 'react';
-import { Home } from './pages/Home';
+// import { Home } from './pages/Home';
+import {NewRoom}  from './pages/NewRoom';
 
 
 
@@ -7,7 +8,7 @@ import { Home } from './pages/Home';
 function App() {
   return (
     <div>
-    <Home />
+    <NewRoom />
 
     </div>
   );
