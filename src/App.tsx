@@ -1,11 +1,13 @@
 import React from 'react';
-
+import { Home } from './pages/Home';
 import { Button } from './Button'
+
+
+
 function App() {
   return (
     <div>
-    <h1>hello world</h1>
-    <Button text="botao 1" />
+    <Home />
 
     </div>
   );
