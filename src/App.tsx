@@ -26,7 +26,25 @@ function App() {
 
   // primeiro parametro é qual funçãos e deseja executar. O segundo(sempre sera um array) é quando.
   // com o vetor vazio a funcao do primeiro parametro sera chamada apenas uma vez
-  useEffect(()=>{}, [])
+
+  //essa funcao vai monitorar la no firebase se ja existia um login pre-feito pelo usuario.
+  // se sim a funcao busca as info e preenche no estado da app
+  useEffect(()=>{
+    auth.onAuthStateChanged(user=>{
+      if(user){
+        const {displayName, photoURL, uid} = user
+
+        if(!displayName || !photoURL) throw new Error('Missing information from Google Account');
+
+        setUser({
+          id: uid,
+          name: displayName,
+          avatar: photoURL
+        })
+      }
+    })
+
+  }, [])
   async function signInWithGoogle(){
     const provider = new firebase.auth.GoogleAuthProvider();
   
