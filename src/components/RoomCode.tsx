@@ -1,4 +1,5 @@
 import copyImg from '../assets/images/copy.svg';
+import '../styles/room-code.scss';
 
 export function RoomCode(){
     return(
@@ -6,7 +7,7 @@ export function RoomCode(){
             <div>
                 <img src={copyImg} alt="Copy room code" />
             </div>
-            <span>Sala #154521564</span>
+            <span>Sala #-Md-JN0xOF7KbM-RIrEq</span>
         </button>
     );
 }
