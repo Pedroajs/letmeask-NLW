@@ -10,6 +10,16 @@
             justify-content: space-between;
             align-items: center;
 
+            >div{
+                display: flex;
+                gap:16px;
+                
+                button{
+                    height: 40px;
+                    
+                }
+            }
+
             >img{
                 max-height: 45px;
             }
