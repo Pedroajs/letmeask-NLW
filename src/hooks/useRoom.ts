@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import {database} from '../services/firebase'
+import { useAuth } from "./useAuth";
 
 type FirebaseQuestions = Record<string, {
     author:{
@@ -8,7 +9,10 @@ type FirebaseQuestions = Record<string, {
     },
     content: string,
     isHighLighted: boolean,
-    isAswered: boolean
+    isAswered: boolean,
+    likes: Record<string, {
+        authorId: string
+    }>
 }> 
 
 type QuestionType = {
@@ -19,10 +23,13 @@ type QuestionType = {
     },
     content: string,
     isHighLighted: boolean,
-    isAswered: boolean
+    isAswered: boolean,
+    likeCount: number,
+    likeId: string | undefined
 }
 
 export function useRoom(roomId: string){
+    const {user} = useAuth();
     const [questions, setQuestons] = useState<QuestionType[]>([])
     const [title, setTitle] = useState('');
 
@@ -31,7 +38,8 @@ export function useRoom(roomId: string){
     useEffect(()=>{
         const roomRef = database.ref(`rooms/${roomId}`);
 
-        roomRef.on('value', room => {
+        const unsubscribeRoomListener  = roomRef.on('value', room => {
+
             const databaseRoom = room.val()
             const firebaseQuestions: FirebaseQuestions = databaseRoom.questions  ?? {};
             const parsedQuestions = Object.entries(firebaseQuestions).map(([key,value]) => {
@@ -40,13 +48,17 @@ export function useRoom(roomId: string){
                     content: value.content,
                     author: value.author,
                     isHighLighted: value.isHighLighted,
-                    isAswered: value.isAswered
+                    isAswered: value.isAswered,
+                    likeCount: Object.values(value.likes ?? {}).length,
+                    likeId: Object.entries(value.likes ?? {}).find(([key, like]) => like.authorId === user?.id)?.[0]
                 }
             });
             setTitle(databaseRoom.title);
             setQuestons(parsedQuestions);
-        })
-    }, [roomId]);
+        });
+
+        return () => roomRef.off('value');
+    }, [roomId, user?.id]);
 
     return {questions, title}
 }
